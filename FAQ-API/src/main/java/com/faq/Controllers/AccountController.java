@@ -1,13 +1,19 @@
 package com.faq.Controllers;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.faq.common.Requests.CreateAccountRequest;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/accounts")
 public class AccountController {
 
     @GetMapping("/")
     public String index() {
-        return "Greetings from spring boot!";
+        return "All users!";
     }
+
+    @PostMapping("/")
+    public String createAccount(@RequestBody CreateAccountRequest createAccountRequest) {
+        return createAccountRequest.getEmail() + "\n" + createAccountRequest.getPassword();
+    };
 }
