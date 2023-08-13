@@ -1,0 +1,17 @@
+version: "1.0"
+services:
+  database:
+    build: ./database
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./database/scripts/init.sql:/docker-entrypoint-initdb.d/A_init.sql
+    
+  api:
+    build: ./FAQ-API
+    ports:
+      - "8080:8080"
+
+volumes:
+  db-data:
