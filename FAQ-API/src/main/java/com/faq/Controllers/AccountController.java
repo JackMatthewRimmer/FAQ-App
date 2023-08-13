@@ -1,2 +1,13 @@
-package com.faq.Controllers;public class AccountController {
+package com.faq.Controllers;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class AccountController {
+
+    @GetMapping("/")
+    public String index() {
+        return "Greetings from spring boot!";
+    }
 }
