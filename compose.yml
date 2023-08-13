@@ -7,6 +7,9 @@ services:
       - "5432:5432"
     volumes:
       - ./database/scripts/init.sql:/docker-entrypoint-initdb.d/A_init.sql
+    
+  api:
+    build: ./FAQ-API
 
 volumes:
   db-data:
