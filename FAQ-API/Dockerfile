@@ -9,6 +9,8 @@ RUN gradle build
 
 FROM openjdk:17
 WORKDIR /api
+
 COPY --from=builder /api/build/libs/FAQ-API-1.0.jar FAQ-API-1.0.jar
-RUN java -jar FAQ-API-1.0.jar
+EXPOSE 8080
+CMD ["java", "-jar", "FAQ-API-1.0.jar"]
 

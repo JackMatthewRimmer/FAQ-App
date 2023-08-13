@@ -10,6 +10,8 @@ services:
     
   api:
     build: ./FAQ-API
+    ports:
+      - "8080:8080"
 
 volumes:
   db-data:
