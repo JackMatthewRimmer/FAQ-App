@@ -12,6 +12,7 @@ public class ApiException extends RuntimeException {
         this.apiErrorType = apiErrorType;
     }
 
+    @Override
     public String getMessage() {
         return apiErrorType.message;
     }
