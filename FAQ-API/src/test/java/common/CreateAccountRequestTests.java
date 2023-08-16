@@ -1,11 +1,13 @@
 package common;
 
-import com.faq.common.Requests.CreateAccountRequest;
+import com.faq.common.ApiException;
+import com.faq.common.Requests.AccountRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 public class CreateAccountRequestTests {
 
@@ -13,11 +15,11 @@ public class CreateAccountRequestTests {
     private static final String invalidEmail = "test.email";
     private static final String validPassword = "password";
 
-    private CreateAccountRequest createAccountRequest;
+    private AccountRequest createAccountRequest;
 
     @BeforeEach
     void initRequest() {
-        createAccountRequest = new CreateAccountRequest();
+        createAccountRequest = new AccountRequest();
     }
 
     @Test
@@ -32,18 +34,18 @@ public class CreateAccountRequestTests {
     void validate_CreateAccountRequest_invalidEmail() {
         createAccountRequest.setEmail(invalidEmail);
         createAccountRequest.setPassword(validPassword);
-        assertFalse(createAccountRequest.validate());
+        assertThrows(ApiException.class, () -> createAccountRequest.validate());
     }
 
     @Test
     void validate_CreateAccountRequest_noEmail() {
         createAccountRequest.setPassword(validPassword);
-        assertFalse(createAccountRequest.validate());
+        assertThrows(ApiException.class, () -> createAccountRequest.validate());
     }
 
     @Test
     void validate_CreateAccountRequest_noPassword() {
         createAccountRequest.setEmail(validEmail);
-        assertFalse(createAccountRequest.validate());
+        assertThrows(ApiException.class, () -> createAccountRequest.validate());
     }
 }

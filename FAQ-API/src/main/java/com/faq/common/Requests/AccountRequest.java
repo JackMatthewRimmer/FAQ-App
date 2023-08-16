@@ -1,9 +1,9 @@
 package com.faq.common.Requests;
 
 
-import com.faq.common.Requests.Request;
+import com.faq.common.ApiException;
 
-public class CreateAccountRequest implements Request {
+public class AccountRequest implements Request {
 
     private String email;
 
@@ -26,16 +26,19 @@ public class CreateAccountRequest implements Request {
     }
 
     @Override
-    public boolean validate() {
+    public boolean validate() throws ApiException {
         if (this.email == null) {
-            return false;
+            throw new ApiException(ApiException.ApiErrorType.ACCOUNT_MISSING_EMAIL);
         }
 
         if (this.password == null) {
-            return false;
+            throw new ApiException(ApiException.ApiErrorType.ACCOUNT_MISSING_PASSWORD);
         }
 
-        return isEmail(this.email);
+        if (!isEmail(this.email)) {
+            throw new ApiException(ApiException.ApiErrorType.ACCOUNT_INVALID_EMAIL);
+        }
+        return true;
     }
 
     private boolean isEmail(String email) {
