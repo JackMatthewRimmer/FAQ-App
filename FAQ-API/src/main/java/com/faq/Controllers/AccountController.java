@@ -1,23 +1,27 @@
 package com.faq.Controllers;
 
+import com.faq.Services.AccountService;
 import com.faq.common.Requests.AccountRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/accounts")
 public class AccountController {
 
-    @GetMapping("/")
-    public String index() {
-        System.out.println("get request");
-        return "All users!";
-    }
+    @Autowired
+    private AccountService accountService;
+    Logger logger = LoggerFactory.getLogger(AccountController.class);
 
-    @PostMapping("/")
+    @PostMapping(
+            value = "/",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+
     public String createAccount(@RequestBody AccountRequest createAccountRequest) {
-        // TODO create the account in the database
-        System.out.println("createAccountRequest = " + createAccountRequest);
-        createAccountRequest.validate();
-        return createAccountRequest.getEmail() + "\n" + createAccountRequest.getPassword();
-    };
+        return accountService.createAccount(createAccountRequest);
+    }
 }

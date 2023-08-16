@@ -1,4 +1,4 @@
-package com.faq.common;
+package com.faq.common.Exceptions;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

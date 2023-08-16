@@ -1,7 +1,7 @@
 package com.faq.common.Requests;
 
 
-import com.faq.common.ApiException;
+import com.faq.common.Exceptions.ApiException;
 
 public class AccountRequest implements Request {
 

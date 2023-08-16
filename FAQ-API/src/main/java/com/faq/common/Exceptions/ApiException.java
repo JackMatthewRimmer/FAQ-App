@@ -1,8 +1,6 @@
-package com.faq.common;
+package com.faq.common.Exceptions;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver;
 
 public class ApiException extends RuntimeException {
 
@@ -29,7 +27,7 @@ public class ApiException extends RuntimeException {
 
         public final String message;
         public final HttpStatus statusCode;
-        private ApiErrorType(String message, HttpStatus statusCode) {
+        ApiErrorType(String message, HttpStatus statusCode) {
             this.message = message;
             this.statusCode = statusCode;
         }

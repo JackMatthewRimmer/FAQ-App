@@ -1,6 +1,6 @@
 package common;
 
-import com.faq.common.ApiException;
+import com.faq.common.Exceptions.ApiException;
 import com.faq.common.Requests.AccountRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-public class CreateAccountRequestTests {
+class CreateAccountRequestTests {
 
     private static final String validEmail = "test.email@foo.com";
     private static final String invalidEmail = "test.email";
