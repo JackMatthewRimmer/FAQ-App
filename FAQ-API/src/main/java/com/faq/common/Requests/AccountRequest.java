@@ -2,6 +2,7 @@ package com.faq.common.Requests;
 
 
 import com.faq.common.Exceptions.ApiException;
+import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 
@@ -10,11 +11,15 @@ import javax.persistence.*;
 public class AccountRequest implements Request {
 
     @Id
+    @Column(name="id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NaturalId
+    @Column(name="email")
     private String email;
 
+    @Column(name="password")
     private String password;
 
     public long getId() {

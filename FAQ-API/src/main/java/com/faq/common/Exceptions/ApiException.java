@@ -20,10 +20,12 @@ public class ApiException extends RuntimeException {
     }
 
     public enum ApiErrorType {
+
         // Accounts
         ACCOUNT_MISSING_EMAIL("Error: the request was missing required field: email", HttpStatus.BAD_REQUEST),
         ACCOUNT_MISSING_PASSWORD("Error: the request was missing required field: password", HttpStatus.BAD_REQUEST),
-        ACCOUNT_INVALID_EMAIL("Error: the request was field was invalid: email", HttpStatus.BAD_REQUEST);
+        ACCOUNT_INVALID_EMAIL("Error: the request was field was invalid: email", HttpStatus.BAD_REQUEST),
+        ACCOUNT_EMAIL_IN_USE("Error: the email provided is already in use", HttpStatus.CONFLICT);
 
         public final String message;
         public final HttpStatus statusCode;
