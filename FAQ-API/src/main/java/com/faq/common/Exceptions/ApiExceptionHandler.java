@@ -9,7 +9,7 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<Object> handleAccountException(ApiException ex) {
-        return new ResponseEntity<>(ex.getMessage(), ex.getStatusCode());
+        return new ResponseEntity<>(ex.getResponseObject(), ex.getStatusCode());
     }
 
 }

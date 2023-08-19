@@ -11,7 +11,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class AccountService {
@@ -19,7 +21,7 @@ public class AccountService {
     @Autowired
     private UserRepository userRepository;
 
-    public String createAccount(AccountRequest accountRequest) throws ApiException {
+    public Map<String, String> createAccount(AccountRequest accountRequest) throws ApiException {
 
         accountRequest.validate();
 
@@ -28,7 +30,9 @@ public class AccountService {
         this.userRepository.save(accountRequest);
         // TODO this should return JWT instead
 
-        return accountRequest.getEmail() + '\n' + accountRequest.getPassword();
+        Map<String, String> response = new HashMap<>();
+        response.put("token", "this should be a real token");
+        return response;
     }
 
     private void verifyEmailNotInUse(String email) {
