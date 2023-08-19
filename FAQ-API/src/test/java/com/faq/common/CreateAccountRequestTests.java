@@ -1,4 +1,4 @@
-package common;
+package com.faq.common;
 
 import com.faq.common.Exceptions.ApiException;
 import com.faq.common.Requests.AccountRequest;
