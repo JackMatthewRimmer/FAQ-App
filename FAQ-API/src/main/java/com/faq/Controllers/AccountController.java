@@ -26,6 +26,12 @@ public class AccountController {
 
         Map<String, String> tokenResponse = accountService.createAccount(createAccountRequest);
         return tokenResponse;
+    }
 
+    @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, String> loginAccount(@RequestBody AccountRequest loginAccountRequest) {
+
+        Map<String, String> tokenResponse = accountService.loginAccount(loginAccountRequest);
+        return tokenResponse;
     }
 }
