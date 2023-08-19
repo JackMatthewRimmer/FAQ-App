@@ -1,5 +1,6 @@
 package com.faq.Services;
 
+import com.faq.common.Exceptions.ApiException;
 import com.faq.common.Repositories.UserRepository;
 import com.faq.common.Requests.AccountRequest;
 
@@ -16,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -47,4 +49,26 @@ class AccountServiceTests {
         assertTrue(token.containsKey(("token")), "Token not present in response for creating account");
     }
 
+    @Test
+    public void requestWithNoEmailTest() {
+        accountRequest.setPassword(VALID_PASSWORD);
+
+        assertThrows(ApiException.class, () -> accountService.createAccount(accountRequest));
+    }
+
+    @Test
+    public void requestWithNoPasswordTest() {
+        accountRequest.setEmail(VALID_EMAIL);
+
+        assertThrows(ApiException.class, () -> accountService.createAccount(accountRequest));
+    }
+
+    @Test void requestWithEmailAlreadyInUse() {
+        accountRequest.setPassword(VALID_PASSWORD);
+        accountRequest.setEmail(VALID_EMAIL);
+
+        when(userRepository.existsByEmail(accountRequest.getEmail())).thenReturn(true);
+
+        assertThrows(ApiException.class, () -> accountService.createAccount(accountRequest));
+    }
 }
