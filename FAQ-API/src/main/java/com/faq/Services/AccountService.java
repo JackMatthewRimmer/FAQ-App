@@ -36,8 +36,11 @@ public class AccountService {
     }
 
     public Map<String, String> loginAccount(AccountRequest accountRequest) throws ApiException {
-        boolean accountExists =
-                userRepository.existsByEmailAndPassword(accountRequest.getEmail(), accountRequest.getPassword());
+
+        accountRequest.validate();
+
+        verifyAccountExists(accountRequest);
+
         Map<String, String> response = new HashMap<>();
         response.put("token", "this should be a real token");
         return response;
@@ -50,6 +53,13 @@ public class AccountService {
         if (emailInUse) {
             throw new ApiException(ApiException.ApiErrorType.ACCOUNT_EMAIL_IN_USE);
         }
+    }
 
+    private void verifyAccountExists(AccountRequest accountRequest) {
+        boolean accountExists =
+                userRepository.existsByEmailAndPassword(accountRequest.getEmail(), accountRequest.getPassword());
+        if (!accountExists) {
+            throw new ApiException(ApiException.ApiErrorType.ACCOUNT_DOES_NOT_EXIST);
+        }
     }
 }

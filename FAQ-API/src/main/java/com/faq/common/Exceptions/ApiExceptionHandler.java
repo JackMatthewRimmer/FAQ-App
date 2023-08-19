@@ -3,13 +3,13 @@ package com.faq.common.Exceptions;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class ApiExceptionHandler {
 
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<Object> handleAccountException(ApiException ex) {
         return new ResponseEntity<>(ex.getResponseObject(), ex.getStatusCode());
     }
-
 }
