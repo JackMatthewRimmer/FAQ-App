@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/accounts")
 public class AccountController {
@@ -16,12 +18,17 @@ public class AccountController {
     private AccountService accountService;
     Logger logger = LoggerFactory.getLogger(AccountController.class);
 
-    @PostMapping(
-            value = "/",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, String> createAccount(@RequestBody AccountRequest createAccountRequest) {
 
-    public String createAccount(@RequestBody AccountRequest createAccountRequest) {
-        return accountService.createAccount(createAccountRequest);
+        Map<String, String> tokenResponse = accountService.createAccount(createAccountRequest);
+        return tokenResponse;
+    }
+
+    @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, String> loginAccount(@RequestBody AccountRequest loginAccountRequest) {
+
+        Map<String, String> tokenResponse = accountService.loginAccount(loginAccountRequest);
+        return tokenResponse;
     }
 }
