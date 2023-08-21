@@ -1,18 +1,15 @@
 package com.faq.Services;
 
+import com.faq.common.Entities.AccountEntity;
 import com.faq.common.Exceptions.ApiException;
 import com.faq.common.Repositories.UserRepository;
 import com.faq.common.Requests.AccountRequest;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -21,28 +18,37 @@ public class AccountService {
     @Autowired
     private UserRepository userRepository;
 
-    public Map<String, String> createAccount(AccountRequest accountRequest) throws ApiException {
+    Logger logger = LoggerFactory.getLogger(AccountService.class);
+
+    public Map<String, String> createAccount(AccountRequest accountRequest)
+            throws ApiException {
 
         accountRequest.validate();
-
+        AccountEntity accountEntity = new AccountEntity(accountRequest);
         verifyEmailNotInUse(accountRequest.getEmail());
 
-        this.userRepository.save(accountRequest);
-        // TODO this should return JWT instead
+        this.userRepository.save(accountEntity);
 
         Map<String, String> response = new HashMap<>();
         response.put("token", "this should be a real token");
+
+        logger.info("Account has been created for {}",
+                accountRequest.getEmail());
         return response;
     }
 
-    public Map<String, String> loginAccount(AccountRequest accountRequest) throws ApiException {
+    public Map<String, String> loginAccount(AccountRequest accountRequest)
+            throws ApiException {
 
         accountRequest.validate();
-
-        verifyAccountExists(accountRequest);
+        AccountEntity accountEntity = new AccountEntity(accountRequest);
+        verifyAccountExists(accountEntity);
 
         Map<String, String> response = new HashMap<>();
         response.put("token", "this should be a real token");
+
+        logger.info("Account successfully logged in for {}",
+                accountRequest.getEmail());
         return response;
     }
 
@@ -51,15 +57,21 @@ public class AccountService {
 
         boolean emailInUse = userRepository.existsByEmail(email);
         if (emailInUse) {
-            throw new ApiException(ApiException.ApiErrorType.ACCOUNT_EMAIL_IN_USE);
+            throw new ApiException
+                    (ApiException.ApiErrorType.ACCOUNT_EMAIL_IN_USE,
+                            AccountService.class);
         }
     }
 
-    private void verifyAccountExists(AccountRequest accountRequest) {
+    private void verifyAccountExists(AccountEntity account) {
         boolean accountExists =
-                userRepository.existsByEmailAndPassword(accountRequest.getEmail(), accountRequest.getPassword());
+                userRepository.existsByEmailAndPassword
+                        (account.getEmail(),
+                                account.getPassword());
         if (!accountExists) {
-            throw new ApiException(ApiException.ApiErrorType.ACCOUNT_DOES_NOT_EXIST);
+            throw new ApiException
+                    (ApiException.ApiErrorType.ACCOUNT_DOES_NOT_EXIST,
+                            AccountService.class);
         }
     }
 }

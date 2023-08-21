@@ -1,5 +1,6 @@
 package com.faq.Services;
 
+import com.faq.Api;
 import com.faq.common.Exceptions.ApiException;
 import com.faq.common.Repositories.UserRepository;
 import com.faq.common.Requests.AccountRequest;
@@ -17,8 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -41,7 +41,7 @@ class AccountServiceTests {
     }
 
     @Test
-    public void validRequestTest() {
+    public void createAccountWithValidRequestTest() {
         accountRequest.setPassword(VALID_PASSWORD);
         accountRequest.setEmail(VALID_EMAIL);
 
@@ -50,25 +50,61 @@ class AccountServiceTests {
     }
 
     @Test
-    public void requestWithNoEmailTest() {
+    void createAccountWithNoEmailTest() {
         accountRequest.setPassword(VALID_PASSWORD);
 
-        assertThrows(ApiException.class, () -> accountService.createAccount(accountRequest));
+        ApiException apiException = assertThrows
+                (ApiException.class, () -> accountService.createAccount(accountRequest));
+
+        assertEquals(apiException.getApiErrorType(), ApiException.ApiErrorType.ACCOUNT_MISSING_EMAIL);
     }
 
     @Test
-    public void requestWithNoPasswordTest() {
+    void createAccountWithNoPasswordTest() {
         accountRequest.setEmail(VALID_EMAIL);
 
-        assertThrows(ApiException.class, () -> accountService.createAccount(accountRequest));
+        ApiException apiException = assertThrows
+                (ApiException.class, () -> accountService.createAccount(accountRequest));
+
+        assertEquals(apiException.getApiErrorType(), ApiException.ApiErrorType.ACCOUNT_MISSING_PASSWORD);
     }
 
-    @Test void requestWithEmailAlreadyInUse() {
+    @Test
+    void createAccountWithEmailAlreadyInUseTest() {
         accountRequest.setPassword(VALID_PASSWORD);
         accountRequest.setEmail(VALID_EMAIL);
 
         when(userRepository.existsByEmail(accountRequest.getEmail())).thenReturn(true);
 
-        assertThrows(ApiException.class, () -> accountService.createAccount(accountRequest));
+        ApiException apiException = assertThrows
+                (ApiException.class, () -> accountService.createAccount(accountRequest));
+
+        assertEquals(apiException.getApiErrorType(), ApiException.ApiErrorType.ACCOUNT_EMAIL_IN_USE);
+    }
+
+    @Test
+    void loginWithValidAccountRequestTest() {
+        accountRequest.setEmail(VALID_EMAIL);
+        accountRequest.setPassword(VALID_PASSWORD);
+
+        when(userRepository.existsByEmailAndPassword
+                (accountRequest.getEmail(), accountRequest.getPassword())).thenReturn(true);
+
+        Map<String, String> token = accountService.loginAccount(accountRequest);
+        assertTrue(token.containsKey(("token")), "Token not present in response for creating account");
+    }
+
+    @Test
+    void loginWithAccountThatDoesNotExistTest() {
+        accountRequest.setEmail(VALID_EMAIL);
+        accountRequest.setPassword(VALID_PASSWORD);
+
+        when(userRepository.existsByEmailAndPassword
+                (accountRequest.getEmail(), accountRequest.getPassword())).thenReturn(false);
+
+        ApiException apiException = assertThrows
+                (ApiException.class, () -> accountService.loginAccount(accountRequest));
+
+        assertEquals(apiException.getApiErrorType(), ApiException.ApiErrorType.ACCOUNT_DOES_NOT_EXIST);
     }
 }

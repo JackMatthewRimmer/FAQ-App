@@ -9,13 +9,16 @@ public class ApiException extends RuntimeException {
 
     private final ApiErrorType apiErrorType;
 
-    public ApiException(ApiErrorType apiErrorType) {
+    private final Class<?> origin;
+
+    public ApiException(ApiErrorType apiErrorType, Class<?> origin) {
         this.apiErrorType = apiErrorType;
+        this.origin = origin;
     }
 
     @Override
     public String getMessage() {
-        return apiErrorType.message;
+        return this.apiErrorType.message;
     }
 
     public Map<String, String> getResponseObject() {
@@ -24,8 +27,16 @@ public class ApiException extends RuntimeException {
         return response;
     }
 
+    public ApiErrorType getApiErrorType() {
+        return apiErrorType;
+    }
+
     public HttpStatus getStatusCode() {
         return apiErrorType.statusCode;
+    }
+
+    public Class<?> getOrigin() {
+        return this.origin;
     }
 
     public enum ApiErrorType {
