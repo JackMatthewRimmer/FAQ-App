@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class AccountService {
@@ -81,19 +82,16 @@ public class AccountService {
 
     private void verifyAccountExists(AccountEntity account) {
 
-        AccountEntity databaseAccount =
+        Optional<AccountEntity> queryResult =
                 userRepository.findByEmail(account.getEmail());
 
-        if (databaseAccount == null) {
-            throw new ApiException
-                    (ApiException.ApiErrorType.ACCOUNT_DOES_NOT_EXIST,
-                            AccountService.class);
-        }
+        boolean passwordsMatch = queryResult
+                .map(databaseAccount ->
+                        passwordEncoder.matches(account.getPassword(), databaseAccount.getPassword()))
+                .orElseThrow(() ->
+                        new ApiException(ApiException.ApiErrorType.ACCOUNT_DOES_NOT_EXIST, AccountService.class));
 
-        boolean accountExists =
-                passwordEncoder.matches(account.getPassword(), databaseAccount.getPassword());
-
-        if (!accountExists) {
+        if (!passwordsMatch) {
             throw new ApiException
                     (ApiException.ApiErrorType.ACCOUNT_PASSWORD_INVALIID,
                             AccountService.class);
