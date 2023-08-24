@@ -21,10 +21,17 @@ public class AccountEntity {
     @Column(name="password")
     private String password;
 
+    public AccountEntity(String email, String hashedPassword) {
+        this.email = email;
+        this.password = hashedPassword;
+    }
+
     public AccountEntity(AccountRequest accountRequest) {
         this.email = accountRequest.getEmail();
         this.password = accountRequest.getPassword();
     }
+
+    public AccountEntity() {}
 
     public String getEmail() {
         return email;

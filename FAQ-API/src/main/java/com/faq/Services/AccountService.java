@@ -6,6 +6,7 @@ import com.faq.common.Repositories.UserRepository;
 import com.faq.common.Requests.AccountRequest;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 
@@ -18,14 +19,23 @@ public class AccountService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     Logger logger = LoggerFactory.getLogger(AccountService.class);
 
     public Map<String, String> createAccount(AccountRequest accountRequest)
             throws ApiException {
 
         accountRequest.validate();
-        AccountEntity accountEntity = new AccountEntity(accountRequest);
         verifyEmailNotInUse(accountRequest.getEmail());
+
+        String hashedPassword =
+                passwordEncoder.encode(accountRequest.getPassword());
+
+        AccountEntity accountEntity =
+                new AccountEntity(accountRequest.getEmail(), hashedPassword);
+
 
         this.userRepository.save(accountEntity);
 
@@ -34,6 +44,7 @@ public class AccountService {
 
         logger.info("Account has been created for {}",
                 accountRequest.getEmail());
+
         return response;
     }
 
@@ -41,7 +52,10 @@ public class AccountService {
             throws ApiException {
 
         accountRequest.validate();
-        AccountEntity accountEntity = new AccountEntity(accountRequest);
+
+        AccountEntity accountEntity =
+                new AccountEntity(accountRequest);
+
         verifyAccountExists(accountEntity);
 
         Map<String, String> response = new HashMap<>();
@@ -49,6 +63,7 @@ public class AccountService {
 
         logger.info("Account successfully logged in for {}",
                 accountRequest.getEmail());
+
         return response;
     }
 
@@ -56,6 +71,7 @@ public class AccountService {
     private void verifyEmailNotInUse(String email) {
 
         boolean emailInUse = userRepository.existsByEmail(email);
+
         if (emailInUse) {
             throw new ApiException
                     (ApiException.ApiErrorType.ACCOUNT_EMAIL_IN_USE,
@@ -64,13 +80,22 @@ public class AccountService {
     }
 
     private void verifyAccountExists(AccountEntity account) {
-        boolean accountExists =
-                userRepository.existsByEmailAndPassword
-                        (account.getEmail(),
-                                account.getPassword());
-        if (!accountExists) {
+
+        AccountEntity databaseAccount =
+                userRepository.findByEmail(account.getEmail());
+
+        if (databaseAccount == null) {
             throw new ApiException
                     (ApiException.ApiErrorType.ACCOUNT_DOES_NOT_EXIST,
+                            AccountService.class);
+        }
+
+        boolean accountExists =
+                passwordEncoder.matches(account.getPassword(), databaseAccount.getPassword());
+
+        if (!accountExists) {
+            throw new ApiException
+                    (ApiException.ApiErrorType.ACCOUNT_PASSWORD_INVALIID,
                             AccountService.class);
         }
     }
