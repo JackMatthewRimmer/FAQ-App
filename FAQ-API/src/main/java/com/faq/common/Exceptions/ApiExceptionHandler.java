@@ -12,7 +12,7 @@ public class ApiExceptionHandler {
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<Object> handleAccountException(ApiException ex) {
         Logger logger = LoggerFactory.getLogger(ex.getOrigin());
-        logger.warn("Error occurred: {}", ex.getMessage());
+        logger.error("Error occurred: {}", ex.getMessage());
         return new ResponseEntity<>(ex.getResponseObject(), ex.getStatusCode());
     }
 }
