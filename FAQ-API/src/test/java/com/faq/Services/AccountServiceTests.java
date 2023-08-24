@@ -5,13 +5,13 @@ import com.faq.common.Exceptions.ApiException;
 import com.faq.common.Repositories.UserRepository;
 import com.faq.common.Requests.AccountRequest;
 
-import com.faq.common.Util.UserPasswordEncoder;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Map;
 import java.util.Optional;
@@ -31,7 +31,7 @@ class AccountServiceTests {
     private UserRepository userRepository;
 
     @Mock
-    UserPasswordEncoder userPasswordEncoder;
+    PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private AccountService accountService;
@@ -88,7 +88,7 @@ class AccountServiceTests {
         accountRequest.setEmail(VALID_EMAIL);
         accountRequest.setPassword(VALID_PASSWORD);
 
-        when(userPasswordEncoder.matches(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
+        when(passwordEncoder.matches(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
         when(userRepository.findByEmail(VALID_EMAIL)).
                 thenReturn(Optional.of(new AccountEntity(VALID_EMAIL, VALID_PASSWORD)));
 
@@ -114,7 +114,7 @@ class AccountServiceTests {
         accountRequest.setEmail(VALID_EMAIL);
         accountRequest.setPassword(VALID_PASSWORD);
 
-        when(userPasswordEncoder.matches(Mockito.anyString(), Mockito.anyString())).thenReturn(false);
+        when(passwordEncoder.matches(Mockito.anyString(), Mockito.anyString())).thenReturn(false);
         when(userRepository.findByEmail(VALID_EMAIL)).
                 thenReturn(Optional.of(new AccountEntity(VALID_EMAIL, VALID_PASSWORD)));
 
