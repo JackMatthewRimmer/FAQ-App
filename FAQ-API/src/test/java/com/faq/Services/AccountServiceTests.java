@@ -41,7 +41,7 @@ class AccountServiceTests {
     private AccountService accountService;
 
     @BeforeEach
-    public void initRequest() {
+    void initRequest() {
         this.accountRequest = new AccountRequest();
     }
 
