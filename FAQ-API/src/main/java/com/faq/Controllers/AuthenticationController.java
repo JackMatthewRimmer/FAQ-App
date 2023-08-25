@@ -1,6 +1,5 @@
 package com.faq.Controllers;
 
-import com.faq.common.Requests.AccountRequest;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

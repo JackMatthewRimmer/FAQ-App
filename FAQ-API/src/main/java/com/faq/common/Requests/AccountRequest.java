@@ -1,10 +1,6 @@
 package com.faq.common.Requests;
 
-
 import com.faq.common.Exceptions.ApiException;
-import org.hibernate.annotations.NaturalId;
-
-import javax.persistence.*;
 
 public class AccountRequest implements Request {
 

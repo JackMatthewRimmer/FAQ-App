@@ -9,9 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.faq.Services.AccountService;
 import com.faq.common.Exceptions.ApiException;
 import com.faq.common.Exceptions.ApiException.ApiErrorType;
-import io.jsonwebtoken.MalformedJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -65,7 +63,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
             UserDetails userDetails = this.accountService.loadUserByUsername(username);
 
-            if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
+            if (jwtTokenUtil.validateToken(jwtToken, userDetails).equals(true)) {
 
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
