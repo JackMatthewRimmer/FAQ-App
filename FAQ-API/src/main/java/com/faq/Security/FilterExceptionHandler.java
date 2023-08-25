@@ -24,8 +24,7 @@ public class FilterExceptionHandler extends OncePerRequestFilter {
         try {
             filterChain.doFilter(httpServletRequest, httpServletResponse);
         } catch (ApiException ex) {
-            apiExceptionHandler.handleAccountException(ex);
-            httpServletResponse.getWriter().write("DJSOAJDIOSAJDISOAJDSOAJDIOSAJ");
+            apiExceptionHandler.handleFilterLevelException(ex, httpServletResponse);
         }
     }
 }
