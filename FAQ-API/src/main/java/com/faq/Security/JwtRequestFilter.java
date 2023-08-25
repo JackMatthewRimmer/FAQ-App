@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.faq.Services.AccountService;
 import com.faq.common.Exceptions.ApiException;
 import com.faq.common.Exceptions.ApiException.ApiErrorType;
+import io.jsonwebtoken.MalformedJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -42,18 +43,23 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         String username = null;
         String jwtToken = null;
-        if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
-            jwtToken = requestTokenHeader.substring(7);
-            try {
-                username = jwtTokenUtil.getUsernameFromToken(jwtToken);
-            } catch (IllegalArgumentException e) {
-                throw new ApiException(ApiErrorType.TOKEN_IS_INVALID, JwtRequestFilter.class);
-            } catch (ExpiredJwtException e) {
-                throw new ApiException(ApiErrorType.TOKEN_IS_EXPIRED, JwtRequestFilter.class);
-            }
-        } else {
-            throw new ApiException
-                            (ApiErrorType.TOKEN_DOES_NOT_BEGIN_WITH_BEARER, JwtRequestFilter.class);
+
+        if (requestTokenHeader == null) {
+            throw new ApiException(ApiErrorType.TOKEN_NOT_PROVIDED, JwtRequestFilter.class);
+        }
+
+        if (!requestTokenHeader.startsWith("Bearer ")) {
+            throw new ApiException(ApiErrorType.TOKEN_DOES_NOT_BEGIN_WITH_BEARER, JwtRequestFilter.class);
+        }
+
+        jwtToken = requestTokenHeader.substring(7);
+
+        try {
+            username = jwtTokenUtil.getUsernameFromToken(jwtToken);
+        } catch (ExpiredJwtException e) {
+            throw new ApiException(ApiErrorType.TOKEN_IS_EXPIRED, JwtRequestFilter.class);
+        } catch (Exception e) {
+            throw new ApiException(ApiErrorType.TOKEN_IS_INVALID, JwtRequestFilter.class);
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

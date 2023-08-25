@@ -54,9 +54,11 @@ public class ApiException extends RuntimeException {
 
         TOKEN_IS_EXPIRED("the provided token was expired", HttpStatus.UNAUTHORIZED),
 
-        TOKEN_DOES_NOT_BEGIN_WITH_BEARER("the provded token did not begin with Bearer", HttpStatus.UNAUTHORIZED),
+        TOKEN_DOES_NOT_BEGIN_WITH_BEARER("the provided token did not begin with Bearer", HttpStatus.UNAUTHORIZED),
 
-        TOKEN_IS_INVALID("the token could not be extracted from the header", HttpStatus.UNAUTHORIZED);
+        TOKEN_NOT_PROVIDED("no token provided", HttpStatus.UNAUTHORIZED),
+
+        TOKEN_IS_INVALID("the provided token could not be extracted from the header", HttpStatus.UNAUTHORIZED);
 
 
 
