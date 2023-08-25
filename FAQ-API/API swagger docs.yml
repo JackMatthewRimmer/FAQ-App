@@ -26,15 +26,56 @@ paths:
           description: Account was successfully created
           schema:
             $ref: '#/definitions/JWT'
+        400:
+          description: invalid payload
+          schema:
+            $ref: '#/definitions/ApiException'
+        409:
+          description: email alread in use
+          schema:
+            $ref: '#/definitions/ApiException'
+
+  /accounts/login:
+    post:
+      summary: Authenticate details, Returns JWT
+      description: Logs in a user and returns a JWT
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in : body
+          name: payload
+          schema:
+            $ref: '#/definitions/AccountRequest'
+      responses:
+        200:
+          description: Account was successfully authenticated
+          schema:
+            $ref: '#/definitions/JWT'
+        400:
+          description: invalid payload
+          schema:
+            $ref: '#/definitions/ApiException'
+        409:
+          description: email alread in use
+          schema:
+            $ref: '#/definitions/ApiException'
 
 definitions:
   JWT:
     properties:
       token:
         type: string
+
   AccountRequest:
     properties:
       email:
         type: string
       password:
+        type: string
+
+  ApiException:
+    properties:
+      Error:
         type: string
