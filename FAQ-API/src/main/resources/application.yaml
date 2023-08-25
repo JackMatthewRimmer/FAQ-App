@@ -1,0 +1,22 @@
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    org.hibernate: INFO
+    com: INFO
+
+spring:
+  datasource:
+    url: jdbc:postgresql://database:5432/faq_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+    hibernate:
+      ddl-auto: create
+
+server:
+  port: 8080
