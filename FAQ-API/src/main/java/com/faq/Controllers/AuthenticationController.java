@@ -4,7 +4,7 @@ import com.faq.common.Requests.AccountRequest;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/test")
+@RequestMapping("/api/v1/test")
 public class AuthenticationController {
 
 
