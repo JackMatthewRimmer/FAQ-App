@@ -1,6 +1,6 @@
 package com.faq.Services;
 
-import com.faq.JwtTokenUtil;
+import com.faq.Security.JwtTokenUtil;
 import com.faq.common.Entities.AccountEntity;
 import com.faq.common.Exceptions.ApiException;
 import com.faq.common.Repositories.UserRepository;
@@ -104,7 +104,7 @@ public class AccountService implements UserDetailsService {
 
         if (!passwordsMatch) {
             throw new ApiException
-                    (ApiException.ApiErrorType.ACCOUNT_PASSWORD_INVALIID,
+                    (ApiException.ApiErrorType.ACCOUNT_PASSWORD_INVALID,
                             AccountService.class);
         }
     }

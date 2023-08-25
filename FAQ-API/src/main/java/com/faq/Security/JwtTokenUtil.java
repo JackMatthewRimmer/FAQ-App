@@ -1,4 +1,4 @@
-package com.faq;
+package com.faq.Security;
 
 import java.io.Serializable;
 import java.util.Date;
