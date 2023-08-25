@@ -1,0 +1,40 @@
+swagger: "2.0"
+info:
+  title: FAQ Api
+  description: Full documentation for the FAQ Api
+  version: 1.0.0
+host: faq.com
+basePath: /api
+schemes:
+  - https
+paths:
+  /accounts/:
+    post:
+      summary: Creates account, Returns JWT
+      description: Posts a new account
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: payload
+          schema:
+            $ref: '#/definitions/AccountRequest'
+      responses:
+        200:
+          description: Account was successfully created
+          schema:
+            $ref: '#/definitions/JWT'
+
+definitions:
+  JWT:
+    properties:
+      token:
+        type: string
+  AccountRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
