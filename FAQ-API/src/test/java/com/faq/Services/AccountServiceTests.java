@@ -1,5 +1,6 @@
 package com.faq.Services;
 
+import com.faq.Security.JwtTokenUtil;
 import com.faq.common.Entities.AccountEntity;
 import com.faq.common.Exceptions.ApiException;
 import com.faq.common.Repositories.UserRepository;
@@ -19,7 +20,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-@Disabled
 @ExtendWith(MockitoExtension.class)
 class AccountServiceTests {
 
@@ -33,6 +33,9 @@ class AccountServiceTests {
 
     @Mock
     PasswordEncoder passwordEncoder;
+
+    @Mock
+    JwtTokenUtil jwtTokenUtil;
 
     @InjectMocks
     private AccountService accountService;

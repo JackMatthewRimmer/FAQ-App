@@ -41,9 +41,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         final String requestTokenHeader = request.getHeader("Authorization");
 
-        String username = null;
-        String jwtToken = null;
-
         if (requestTokenHeader == null) {
             throw new ApiException(ApiErrorType.TOKEN_NOT_PROVIDED, JwtRequestFilter.class);
         }
@@ -52,6 +49,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             throw new ApiException(ApiErrorType.TOKEN_DOES_NOT_BEGIN_WITH_BEARER, JwtRequestFilter.class);
         }
 
+        String username = null;
+        String jwtToken = null;
         jwtToken = requestTokenHeader.substring(7);
 
         try {
