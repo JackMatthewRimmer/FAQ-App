@@ -2,6 +2,8 @@ package com.faq.common.Requests;
 
 import com.faq.common.Exceptions.ApiException;
 
+import static com.faq.common.Exceptions.ApiException.ApiErrorType.*;
+
 public class AccountRequest implements Request {
 
     private String email;
@@ -27,18 +29,15 @@ public class AccountRequest implements Request {
     @Override
     public boolean validate() throws ApiException {
         if (this.email == null) {
-            throw new ApiException(ApiException.ApiErrorType.ACCOUNT_MISSING_EMAIL,
-                AccountRequest.class);
+            throw new ApiException(ACCOUNT_MISSING_EMAIL, AccountRequest.class);
         }
 
         if (this.password == null) {
-            throw new ApiException(ApiException.ApiErrorType.ACCOUNT_MISSING_PASSWORD,
-                AccountRequest.class);
+            throw new ApiException(ACCOUNT_MISSING_PASSWORD, AccountRequest.class);
         }
 
         if (!isEmail(this.email)) {
-            throw new ApiException(ApiException.ApiErrorType.ACCOUNT_INVALID_EMAIL,
-                    AccountRequest.class);
+            throw new ApiException(ACCOUNT_INVALID_EMAIL, AccountRequest.class);
         }
         return true;
     }

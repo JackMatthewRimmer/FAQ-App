@@ -18,6 +18,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.faq.common.Exceptions.ApiException.ApiErrorType.*;
+
 @Service
 public class AccountService implements UserDetailsService {
 
@@ -36,14 +38,11 @@ public class AccountService implements UserDetailsService {
             throws ApiException {
 
         accountRequest.validate();
-
         verifyEmailNotInUse(accountRequest.getEmail());
 
-        String hashedPassword =
-                passwordEncoder.encode(accountRequest.getPassword());
+        String hashedPassword = passwordEncoder.encode(accountRequest.getPassword());
 
-        AccountEntity accountEntity =
-                new AccountEntity(accountRequest.getEmail(), hashedPassword);
+        AccountEntity accountEntity = new AccountEntity(accountRequest.getEmail(), hashedPassword);
 
         this.userRepository.save(accountEntity);
 
@@ -52,8 +51,7 @@ public class AccountService implements UserDetailsService {
         Map<String, String> response = new HashMap<>();
         response.put("token", token);
 
-        logger.info("Account has been created for {}",
-                accountRequest.getEmail());
+        logger.info("Account has been created for {}", accountRequest.getEmail());
 
         return response;
     }
@@ -63,8 +61,7 @@ public class AccountService implements UserDetailsService {
 
         accountRequest.validate();
 
-        AccountEntity accountEntity =
-                new AccountEntity(accountRequest);
+        AccountEntity accountEntity = new AccountEntity(accountRequest);
 
         verifyAccountExists(accountEntity);
 
@@ -86,27 +83,22 @@ public class AccountService implements UserDetailsService {
         boolean emailInUse = userRepository.existsByEmail(email);
 
         if (emailInUse) {
-            throw new ApiException
-                    (ApiException.ApiErrorType.ACCOUNT_EMAIL_IN_USE,
-                            AccountService.class);
+            throw new ApiException(ACCOUNT_EMAIL_IN_USE, AccountService.class);
         }
     }
 
     private void verifyAccountExists(AccountEntity account) {
 
-        Optional<AccountEntity> queryResult =
-                userRepository.findByEmail(account.getEmail());
+        Optional<AccountEntity> queryResult = userRepository.findByEmail(account.getEmail());
 
         boolean passwordsMatch = queryResult
                 .map(databaseAccount ->
                         passwordEncoder.matches(account.getPassword(), databaseAccount.getPassword()))
                 .orElseThrow(() ->
-                        new ApiException(ApiException.ApiErrorType.ACCOUNT_DOES_NOT_EXIST, AccountService.class));
+                        new ApiException(ACCOUNT_DOES_NOT_EXIST, AccountService.class));
 
         if (!passwordsMatch) {
-            throw new ApiException
-                    (ApiException.ApiErrorType.ACCOUNT_PASSWORD_INVALID,
-                            AccountService.class);
+            throw new ApiException(ACCOUNT_PASSWORD_INVALID, AccountService.class);
         }
     }
 
@@ -114,6 +106,6 @@ public class AccountService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByEmail(username)
                 .orElseThrow(() ->
-                        new ApiException(ApiException.ApiErrorType.ACCOUNT_DOES_NOT_EXIST, AccountService.class));
+                        new ApiException(ACCOUNT_DOES_NOT_EXIST, AccountService.class));
     }
 }

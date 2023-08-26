@@ -19,6 +19,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import io.jsonwebtoken.ExpiredJwtException;
 
+import static com.faq.common.Exceptions.ApiException.ApiErrorType.*;
+
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
@@ -40,11 +42,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         final String requestTokenHeader = request.getHeader("Authorization");
 
         if (requestTokenHeader == null) {
-            throw new ApiException(ApiErrorType.TOKEN_NOT_PROVIDED, JwtRequestFilter.class);
+            throw new ApiException(TOKEN_NOT_PROVIDED, JwtRequestFilter.class);
         }
 
         if (!requestTokenHeader.startsWith("Bearer ")) {
-            throw new ApiException(ApiErrorType.TOKEN_DOES_NOT_BEGIN_WITH_BEARER, JwtRequestFilter.class);
+            throw new ApiException(TOKEN_DOES_NOT_BEGIN_WITH_BEARER, JwtRequestFilter.class);
         }
 
         String username = null;
@@ -54,9 +56,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         try {
             username = jwtTokenUtil.getUsernameFromToken(jwtToken);
         } catch (ExpiredJwtException e) {
-            throw new ApiException(ApiErrorType.TOKEN_IS_EXPIRED, JwtRequestFilter.class);
+            throw new ApiException(TOKEN_IS_EXPIRED, JwtRequestFilter.class);
         } catch (Exception e) {
-            throw new ApiException(ApiErrorType.TOKEN_IS_INVALID, JwtRequestFilter.class);
+            throw new ApiException(TOKEN_IS_INVALID, JwtRequestFilter.class);
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
