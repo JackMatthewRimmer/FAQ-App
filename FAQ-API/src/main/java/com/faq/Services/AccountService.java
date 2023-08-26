@@ -7,6 +7,7 @@ import com.faq.common.Repositories.UserRepository;
 import com.faq.common.Requests.AccountRequest;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -34,7 +35,7 @@ public class AccountService implements UserDetailsService {
 
     Logger logger = LoggerFactory.getLogger(AccountService.class);
 
-    public Map<String, String> createAccount(AccountRequest accountRequest)
+    public Map<String, String> createAccount(@NonNull AccountRequest accountRequest)
             throws ApiException {
 
         accountRequest.validate();
@@ -56,7 +57,7 @@ public class AccountService implements UserDetailsService {
         return response;
     }
 
-    public Map<String, String> loginAccount(AccountRequest accountRequest)
+    public Map<String, String> loginAccount(@NonNull AccountRequest accountRequest)
             throws ApiException {
 
         accountRequest.validate();
@@ -77,8 +78,7 @@ public class AccountService implements UserDetailsService {
         return response;
     }
 
-
-    private void verifyEmailNotInUse(String email) {
+    private void verifyEmailNotInUse(@NonNull String email) {
 
         boolean emailInUse = userRepository.existsByEmail(email);
 
@@ -87,7 +87,7 @@ public class AccountService implements UserDetailsService {
         }
     }
 
-    private void verifyAccountExists(AccountEntity account) {
+    private void verifyAccountExists(@NonNull AccountEntity account) {
 
         Optional<AccountEntity> queryResult = userRepository.findByEmail(account.getEmail());
 
@@ -103,7 +103,7 @@ public class AccountService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
         return userRepository.findByEmail(username)
                 .orElseThrow(() ->
                         new ApiException(ACCOUNT_DOES_NOT_EXIST, AccountService.class));
