@@ -18,6 +18,5 @@ public class QuestionService {
         Map<String, String> response = new HashMap<>();
         response.put("Location", "Resource");
         return response;
-
     }
 }
