@@ -22,7 +22,7 @@ paths:
           schema:
             $ref: '#/definitions/AccountRequest'
       responses:
-        200:
+        201:
           description: Account was successfully created
           schema:
             $ref: '#/definitions/JWT'
@@ -58,7 +58,7 @@ paths:
           schema:
             $ref: '#/definitions/ApiException'
         409:
-          description: email alread in use
+          description: email already in use
           schema:
             $ref: '#/definitions/ApiException'
 

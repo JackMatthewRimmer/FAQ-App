@@ -5,16 +5,22 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
-@RequestMapping("/api/v1/test")
-public class AuthenticationController {
+@RequestMapping("/api/v1/questions")
+public class QuestionController {
 
 
     @GetMapping(value="/")
-    public String test() {
+    public Map<String, String> test() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return userDetails.getUsername();
+
+        Map<String, String> dummyResponse = new HashMap<>();
+        dummyResponse.put("details", userDetails.getUsername());
+        return dummyResponse;
     }
 
 }
