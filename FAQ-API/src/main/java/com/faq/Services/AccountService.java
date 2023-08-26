@@ -36,6 +36,7 @@ public class AccountService implements UserDetailsService {
             throws ApiException {
 
         accountRequest.validate();
+
         verifyEmailNotInUse(accountRequest.getEmail());
 
         String hashedPassword =

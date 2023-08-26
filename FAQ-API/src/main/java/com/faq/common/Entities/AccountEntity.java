@@ -16,9 +16,9 @@ import java.util.List;
 public class AccountEntity implements UserDetails {
 
     @Id
-    @Column(name="id")
+    @Column(name="users_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private long users_id;
 
     @NaturalId
     @Column(name="email")

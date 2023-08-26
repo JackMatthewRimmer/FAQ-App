@@ -2,13 +2,13 @@ DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS questions;
 
 CREATE TABLE users (
-    user_id SERIAL PRIMARY KEY,
+    users_id SERIAL PRIMARY KEY,
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE questions (
-    question_id SERIAL PRIMARY KEY,
+    questions_id SERIAL PRIMARY KEY,
     user_id INTEGER,
     title VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
