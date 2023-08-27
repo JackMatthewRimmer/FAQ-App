@@ -10,7 +10,6 @@ import com.faq.Services.AccountService;
 import com.faq.common.Exceptions.ApiException;
 import com.faq.common.Exceptions.ApiException.ApiErrorType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +18,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import io.jsonwebtoken.ExpiredJwtException;
+
+import static com.faq.common.Exceptions.ApiException.ApiErrorType.*;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
@@ -40,27 +41,31 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         final String requestTokenHeader = request.getHeader("Authorization");
 
+        if (requestTokenHeader == null) {
+            throw new ApiException(TOKEN_NOT_PROVIDED, JwtRequestFilter.class);
+        }
+
+        if (!requestTokenHeader.startsWith("Bearer ")) {
+            throw new ApiException(TOKEN_DOES_NOT_BEGIN_WITH_BEARER, JwtRequestFilter.class);
+        }
+
         String username = null;
         String jwtToken = null;
-        if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
-            jwtToken = requestTokenHeader.substring(7);
-            try {
-                username = jwtTokenUtil.getUsernameFromToken(jwtToken);
-            } catch (IllegalArgumentException e) {
-                throw new ApiException(ApiErrorType.TOKEN_IS_INVALID, JwtRequestFilter.class);
-            } catch (ExpiredJwtException e) {
-                throw new ApiException(ApiErrorType.TOKEN_IS_EXPIRED, JwtRequestFilter.class);
-            }
-        } else {
-            throw new ApiException
-                            (ApiErrorType.TOKEN_DOES_NOT_BEGIN_WITH_BEARER, JwtRequestFilter.class);
+        jwtToken = requestTokenHeader.substring(7);
+
+        try {
+            username = jwtTokenUtil.getUsernameFromToken(jwtToken);
+        } catch (ExpiredJwtException e) {
+            throw new ApiException(TOKEN_IS_EXPIRED, JwtRequestFilter.class);
+        } catch (Exception e) {
+            throw new ApiException(TOKEN_IS_INVALID, JwtRequestFilter.class);
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
             UserDetails userDetails = this.accountService.loadUserByUsername(username);
 
-            if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
+            if (jwtTokenUtil.validateToken(jwtToken, userDetails).equals(true)) {
 
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());

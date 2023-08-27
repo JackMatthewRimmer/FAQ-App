@@ -7,6 +7,7 @@ import com.faq.common.Repositories.UserRepository;
 import com.faq.common.Requests.AccountRequest;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,6 +18,8 @@ import org.slf4j.Logger;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
+import static com.faq.common.Exceptions.ApiException.ApiErrorType.*;
 
 @Service
 public class AccountService implements UserDetailsService {
@@ -32,17 +35,15 @@ public class AccountService implements UserDetailsService {
 
     Logger logger = LoggerFactory.getLogger(AccountService.class);
 
-    public Map<String, String> createAccount(AccountRequest accountRequest)
+    public Map<String, String> createAccount(@NonNull AccountRequest accountRequest)
             throws ApiException {
 
         accountRequest.validate();
         verifyEmailNotInUse(accountRequest.getEmail());
 
-        String hashedPassword =
-                passwordEncoder.encode(accountRequest.getPassword());
+        String hashedPassword = passwordEncoder.encode(accountRequest.getPassword());
 
-        AccountEntity accountEntity =
-                new AccountEntity(accountRequest.getEmail(), hashedPassword);
+        AccountEntity accountEntity = new AccountEntity(accountRequest.getEmail(), hashedPassword);
 
         this.userRepository.save(accountEntity);
 
@@ -51,19 +52,17 @@ public class AccountService implements UserDetailsService {
         Map<String, String> response = new HashMap<>();
         response.put("token", token);
 
-        logger.info("Account has been created for {}",
-                accountRequest.getEmail());
+        logger.info("Account has been created for {}", accountRequest.getEmail());
 
         return response;
     }
 
-    public Map<String, String> loginAccount(AccountRequest accountRequest)
+    public Map<String, String> loginAccount(@NonNull AccountRequest accountRequest)
             throws ApiException {
 
         accountRequest.validate();
 
-        AccountEntity accountEntity =
-                new AccountEntity(accountRequest);
+        AccountEntity accountEntity = new AccountEntity(accountRequest);
 
         verifyAccountExists(accountEntity);
 
@@ -79,40 +78,34 @@ public class AccountService implements UserDetailsService {
         return response;
     }
 
-
-    private void verifyEmailNotInUse(String email) {
+    private void verifyEmailNotInUse(@NonNull String email) {
 
         boolean emailInUse = userRepository.existsByEmail(email);
 
         if (emailInUse) {
-            throw new ApiException
-                    (ApiException.ApiErrorType.ACCOUNT_EMAIL_IN_USE,
-                            AccountService.class);
+            throw new ApiException(ACCOUNT_EMAIL_IN_USE, AccountService.class);
         }
     }
 
-    private void verifyAccountExists(AccountEntity account) {
+    private void verifyAccountExists(@NonNull AccountEntity account) {
 
-        Optional<AccountEntity> queryResult =
-                userRepository.findByEmail(account.getEmail());
+        Optional<AccountEntity> queryResult = userRepository.findByEmail(account.getEmail());
 
         boolean passwordsMatch = queryResult
                 .map(databaseAccount ->
                         passwordEncoder.matches(account.getPassword(), databaseAccount.getPassword()))
                 .orElseThrow(() ->
-                        new ApiException(ApiException.ApiErrorType.ACCOUNT_DOES_NOT_EXIST, AccountService.class));
+                        new ApiException(ACCOUNT_DOES_NOT_EXIST, AccountService.class));
 
         if (!passwordsMatch) {
-            throw new ApiException
-                    (ApiException.ApiErrorType.ACCOUNT_PASSWORD_INVALID,
-                            AccountService.class);
+            throw new ApiException(ACCOUNT_PASSWORD_INVALID, AccountService.class);
         }
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
         return userRepository.findByEmail(username)
                 .orElseThrow(() ->
-                        new ApiException(ApiException.ApiErrorType.ACCOUNT_DOES_NOT_EXIST, AccountService.class));
+                        new ApiException(ACCOUNT_DOES_NOT_EXIST, AccountService.class));
     }
 }
