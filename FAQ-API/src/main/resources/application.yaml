@@ -16,7 +16,7 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: false
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
 
 jwt:
   secret:

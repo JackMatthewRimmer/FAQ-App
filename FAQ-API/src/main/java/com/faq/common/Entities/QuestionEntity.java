@@ -1,5 +1,8 @@
 package com.faq.common.Entities;
 
+import com.faq.common.Requests.QuestionRequest;
+import org.springframework.lang.NonNull;
+
 import javax.persistence.*;
 
 @Entity
@@ -9,11 +12,7 @@ public class QuestionEntity {
     @Id
     @Column(name = "questions_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long questions_id;
-
-    @ManyToOne
-    @JoinColumn(name = "users_id")
-    private AccountEntity account;
+    private long questionsId;
 
     @Column(name = "title")
     private String title;
@@ -22,4 +21,33 @@ public class QuestionEntity {
     private String content;
 
     public QuestionEntity() {}
+
+    public QuestionEntity(@NonNull QuestionRequest questionRequest) {
+        this.title = questionRequest.getTitle();
+        this.content = questionRequest.getContent();
+    }
+
+    public long getQuestionsId() {
+        return questionsId;
+    }
+
+    public void setQuestionsId(long questionsId) {
+        this.questionsId = questionsId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 }

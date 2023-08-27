@@ -12,13 +12,13 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "users")
+@Table(name = "accounts")
 public class AccountEntity implements UserDetails {
 
     @Id
-    @Column(name="users_id")
+    @Column(name="accounts_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long users_id;
+    private long accountsId;
 
     @NaturalId
     @Column(name="email")
@@ -26,6 +26,8 @@ public class AccountEntity implements UserDetails {
 
     @Column(name="password")
     private String password;
+
+    public AccountEntity() {}
 
     public AccountEntity(String email, String hashedPassword) {
         this.email = email;
@@ -37,7 +39,9 @@ public class AccountEntity implements UserDetails {
         this.password = accountRequest.getPassword();
     }
 
-    public AccountEntity() {}
+    public long getAccountsId() {
+        return accountsId;
+    }
 
     public String getEmail() {
         return email;
