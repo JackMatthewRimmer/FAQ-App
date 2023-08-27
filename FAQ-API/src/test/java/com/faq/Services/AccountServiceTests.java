@@ -3,7 +3,7 @@ package com.faq.Services;
 import com.faq.Security.JwtTokenUtil;
 import com.faq.common.Entities.AccountEntity;
 import com.faq.common.Exceptions.ApiException;
-import com.faq.common.Repositories.UserRepository;
+import com.faq.common.Repositories.AccountRepository;
 import com.faq.common.Requests.AccountRequest;
 
 import org.junit.jupiter.api.*;
@@ -29,7 +29,7 @@ class AccountServiceTests {
     private AccountRequest accountRequest;
 
     @Mock
-    private UserRepository userRepository;
+    private AccountRepository userRepository;
 
     @Mock
     PasswordEncoder passwordEncoder;

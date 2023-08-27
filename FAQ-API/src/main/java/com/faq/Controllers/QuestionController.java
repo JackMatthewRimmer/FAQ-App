@@ -1,6 +1,7 @@
 package com.faq.Controllers;
 
 import com.faq.Services.QuestionService;
+import com.faq.common.Entities.AccountEntity;
 import com.faq.common.Requests.QuestionRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,7 @@ public class QuestionController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> test(@RequestBody QuestionRequest questionRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails principal = (UserDetails) authentication.getPrincipal();
+        AccountEntity principal = (AccountEntity) authentication.getPrincipal();
 
         return new ResponseEntity<>
                 (questionService.createQuestion(questionRequest, principal), HttpStatus.CREATED);
