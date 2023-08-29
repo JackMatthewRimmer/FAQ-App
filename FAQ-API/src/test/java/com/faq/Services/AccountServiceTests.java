@@ -32,10 +32,10 @@ class AccountServiceTests {
     private AccountRepository userRepository;
 
     @Mock
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @Mock
-    JwtTokenUtil jwtTokenUtil;
+    private JwtTokenUtil jwtTokenUtil;
 
     @InjectMocks
     private AccountService accountService;
