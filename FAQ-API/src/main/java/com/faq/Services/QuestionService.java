@@ -40,8 +40,9 @@ public class QuestionService {
         return response;
     }
 
-    public List<Long> getQuestions(@NonNull AccountEntity principal) throws ApiException {
-        return assignedQuestionsRepository.findQuestionIdsByAccountId(principal.getAccountsId());
+    public List<QuestionEntity> getQuestions(@NonNull AccountEntity principal) throws ApiException {
+        List<Long> questionIds = assignedQuestionsRepository.findQuestionIdsByAccountId(principal.getAccountsId());
+        return questionRepository.findAllById(questionIds);
     }
 
     private Long assignQuestionToAccount(@NonNull QuestionEntity questionEntity,
