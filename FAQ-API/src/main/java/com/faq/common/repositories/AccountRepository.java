@@ -1,6 +1,6 @@
-package com.faq.common.Repositories;
+package com.faq.common.repositories;
 
-import com.faq.common.Entities.AccountEntity;
+import com.faq.common.entities.AccountEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

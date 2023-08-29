@@ -1,6 +1,6 @@
-package com.faq.common.Entities;
+package com.faq.common.entities;
 
-import com.faq.common.Requests.AccountRequest;
+import com.faq.common.requests.AccountRequest;
 import org.hibernate.annotations.NaturalId;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

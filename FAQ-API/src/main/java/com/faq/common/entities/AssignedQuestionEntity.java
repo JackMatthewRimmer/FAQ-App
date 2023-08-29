@@ -1,6 +1,4 @@
-package com.faq.common.Entities;
-
-import org.springframework.security.core.userdetails.UserDetails;
+package com.faq.common.entities;
 
 import javax.persistence.*;
 

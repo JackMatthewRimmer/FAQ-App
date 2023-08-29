@@ -1,4 +1,4 @@
-package com.faq.common.Requests;
+package com.faq.common.requests;
 
 public interface Request {
 

@@ -1,24 +1,20 @@
-package com.faq.Services;
+package com.faq.services;
 
-import com.faq.common.Entities.AccountEntity;
-import com.faq.common.Entities.AssignedQuestionEntity;
-import com.faq.common.Entities.QuestionEntity;
-import com.faq.common.Repositories.AssignedQuestionsRepository;
-import com.faq.common.Repositories.QuestionRepository;
-import com.faq.common.Requests.QuestionRequest;
+import com.faq.common.entities.AccountEntity;
+import com.faq.common.repositories.AssignedQuestionsRepository;
+import com.faq.common.repositories.QuestionRepository;
+import com.faq.common.requests.QuestionRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class QuestionServiceTests {

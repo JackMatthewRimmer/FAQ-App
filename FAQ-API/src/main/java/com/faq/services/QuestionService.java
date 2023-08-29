@@ -1,12 +1,12 @@
-package com.faq.Services;
+package com.faq.services;
 
-import com.faq.common.Entities.AccountEntity;
-import com.faq.common.Entities.AssignedQuestionEntity;
-import com.faq.common.Entities.QuestionEntity;
-import com.faq.common.Exceptions.ApiException;
-import com.faq.common.Repositories.AssignedQuestionsRepository;
-import com.faq.common.Repositories.QuestionRepository;
-import com.faq.common.Requests.QuestionRequest;
+import com.faq.common.entities.AccountEntity;
+import com.faq.common.entities.AssignedQuestionEntity;
+import com.faq.common.entities.QuestionEntity;
+import com.faq.common.exceptions.ApiException;
+import com.faq.common.repositories.AssignedQuestionsRepository;
+import com.faq.common.repositories.QuestionRepository;
+import com.faq.common.requests.QuestionRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.faq.common.Exceptions.ApiException.ApiErrorType.QUESTION_DOES_NOT_EXISTS;
+import static com.faq.common.exceptions.ApiException.ApiErrorType.QUESTION_DOES_NOT_EXISTS;
 
 @Service
 public class QuestionService {

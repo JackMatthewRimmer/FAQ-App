@@ -1,10 +1,10 @@
-package com.faq.Services;
+package com.faq.services;
 
-import com.faq.Security.JwtTokenUtil;
-import com.faq.common.Entities.AccountEntity;
-import com.faq.common.Exceptions.ApiException;
-import com.faq.common.Repositories.AccountRepository;
-import com.faq.common.Requests.AccountRequest;
+import com.faq.security.JwtTokenUtil;
+import com.faq.common.entities.AccountEntity;
+import com.faq.common.exceptions.ApiException;
+import com.faq.common.repositories.AccountRepository;
+import com.faq.common.requests.AccountRequest;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.faq.common.Exceptions.ApiException.ApiErrorType.*;
+import static com.faq.common.exceptions.ApiException.ApiErrorType.*;
 
 @Service
 public class AccountService implements UserDetailsService {

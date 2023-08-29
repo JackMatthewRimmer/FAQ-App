@@ -1,6 +1,6 @@
-package com.faq.common.Entities;
+package com.faq.common.entities;
 
-import com.faq.common.Requests.QuestionRequest;
+import com.faq.common.requests.QuestionRequest;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;

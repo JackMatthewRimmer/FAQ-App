@@ -1,6 +1,6 @@
-package com.faq.common.Repositories;
+package com.faq.common.repositories;
 
-import com.faq.common.Entities.AssignedQuestionEntity;
+import com.faq.common.entities.AssignedQuestionEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
