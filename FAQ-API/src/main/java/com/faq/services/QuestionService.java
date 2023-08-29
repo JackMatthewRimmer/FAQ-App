@@ -10,6 +10,9 @@ import com.faq.common.requests.QuestionRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
@@ -44,12 +47,29 @@ public class QuestionService {
         return response;
     }
 
-    public List<QuestionEntity> getQuestions(@NonNull AccountEntity principal) throws ApiException {
-        // TODO this will have a search method at some point
-        List<Long> questionIds = assignedQuestionsRepository.findQuestionIdsByAccountId(principal.getAccountsId());
+    public Map<String, Object> getQuestions(@NonNull AccountEntity principal) throws ApiException {
+        Page<QuestionEntity> page = getAllQuestions(principal);
 
+        Map<String, Object> response = new HashMap<>();
+        response.put("questions", page.getContent());
+        response.put("currentPage", page.getNumber());
+        response.put("totalItems", page.getTotalElements());
+        response.put("totalPages", page.getTotalPages());
+
+        return response;
+
+    }
+
+    private Page<QuestionEntity> getAllQuestions(@NonNull AccountEntity principal) throws ApiException {
+        List<Long> questionIds = assignedQuestionsRepository
+                .findQuestionIdsByAccountId(principal.getAccountsId());
         logger.info("Questions fetched for {}", principal.getEmail());
-        return questionRepository.findAllById(questionIds);
+        Pageable page = PageRequest.of(0, 10);
+        return questionRepository.findAllByQuestionsIdIn(questionIds, page);
+    }
+
+    private List<QuestionEntity> getQuestionsWithSearch(@NonNull AccountEntity principal) throws ApiException {
+        return null;
     }
 
     public void updateQuestion(@NonNull AccountEntity principal, Long questionId, QuestionRequest questionRequest)
