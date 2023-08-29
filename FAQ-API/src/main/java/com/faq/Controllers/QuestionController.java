@@ -28,14 +28,22 @@ public class QuestionController {
                 (questionService.createQuestion(questionRequest, principal), HttpStatus.CREATED);
     }
 
-    @GetMapping(value="/", consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value="/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getQuestions() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         AccountEntity principal = (AccountEntity) authentication.getPrincipal();
 
         return new ResponseEntity<>
                 (questionService.getQuestions(principal), HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> updateQuestion(@PathVariable Long id, @RequestBody QuestionRequest questionRequest) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        AccountEntity principal = (AccountEntity) authentication.getPrincipal();
+
+        questionService.updateQuestion(principal, id, questionRequest);
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
 }

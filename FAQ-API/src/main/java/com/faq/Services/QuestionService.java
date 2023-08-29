@@ -9,12 +9,15 @@ import com.faq.common.Repositories.QuestionRepository;
 import com.faq.common.Requests.QuestionRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
+import static com.faq.common.Exceptions.ApiException.ApiErrorType.QUESTION_DOES_NOT_EXISTS;
+import static com.faq.common.Exceptions.ApiException.ApiErrorType.QUESTION_NOT_AUTHORIZED;
 
 @Service
 public class QuestionService {
@@ -45,6 +48,26 @@ public class QuestionService {
         return questionRepository.findAllById(questionIds);
     }
 
+    public void updateQuestion(@NonNull AccountEntity principal, Long questionId, QuestionRequest questionRequest)
+            throws ApiException {
+
+        questionRequest.validate();
+        QuestionEntity questionEntity = verifyAccountOwnsQuestion(principal, questionId);
+        questionEntity.setTitle(questionRequest.getTitle());
+        questionEntity.setContent(questionRequest.getContent());
+        questionRepository.save(questionEntity);
+    }
+
+    private QuestionEntity verifyAccountOwnsQuestion(@NonNull AccountEntity principal, Long questionId)
+            throws ApiException {
+
+        AssignedQuestionEntity assignedQuestionEntity = assignedQuestionsRepository.
+                findByAccountEntity_AccountsIdAndQuestionEntity_QuestionsId(principal.getAccountsId(), questionId)
+                .orElseThrow(() -> new ApiException(QUESTION_NOT_AUTHORIZED, QuestionService.class));
+
+        return assignedQuestionEntity.getQuestionEntity();
+    }
+
     private Long assignQuestionToAccount(@NonNull QuestionEntity questionEntity,
                                          @NonNull AccountEntity principal) {
 
@@ -53,6 +76,5 @@ public class QuestionService {
 
         assignedQuestionsRepository.save(assignedQuestionEntity);
 
-        return assignedQuestionEntity.getAssignedQuestionsId();
-    }
+        return assignedQuestionEntity.getAssignedQuestionsId(); }
 }
