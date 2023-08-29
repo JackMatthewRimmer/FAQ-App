@@ -58,10 +58,7 @@ public class ApiException extends RuntimeException {
         // ACCOUNTS
         QUESTION_MISSING_TITLE("the request was missing required field: title", HttpStatus.BAD_REQUEST),
         QUESTION_MISSING_CONTENT("the request was missing required field: content", HttpStatus.BAD_REQUEST),
-        QUESTION_DOES_NOT_EXISTS("the question specified in the url does not exists", HttpStatus.BAD_REQUEST),
-        QUESTION_NOT_AUTHORIZED("not authorized to alter question with specified id", HttpStatus.UNAUTHORIZED);
-
-
+        QUESTION_DOES_NOT_EXISTS("the question specified in the url does not exists", HttpStatus.BAD_REQUEST);
 
         public final String message;
         public final HttpStatus statusCode;
