@@ -9,11 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/questions")
@@ -24,12 +20,22 @@ public class QuestionController {
 
     @PostMapping(value="/", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> test(@RequestBody QuestionRequest questionRequest) {
+    public ResponseEntity<Object> createQuestion(@RequestBody QuestionRequest questionRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         AccountEntity principal = (AccountEntity) authentication.getPrincipal();
 
         return new ResponseEntity<>
                 (questionService.createQuestion(questionRequest, principal), HttpStatus.CREATED);
+    }
+
+    @GetMapping(value="/", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getQuestions() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        AccountEntity principal = (AccountEntity) authentication.getPrincipal();
+
+        return new ResponseEntity<>
+                (questionService.getQuestions(principal), HttpStatus.OK);
     }
 
 }

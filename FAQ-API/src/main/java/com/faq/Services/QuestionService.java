@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -37,6 +38,10 @@ public class QuestionService {
         Map<String, String> response = new HashMap<>();
         response.put("Location", "/questions/" + assignedQuestionId.toString());
         return response;
+    }
+
+    public List<Long> getQuestions(@NonNull AccountEntity principal) throws ApiException {
+        return assignedQuestionsRepository.findQuestionIdsByAccountId(principal.getAccountsId());
     }
 
     private Long assignQuestionToAccount(@NonNull QuestionEntity questionEntity,
