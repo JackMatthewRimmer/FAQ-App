@@ -45,6 +45,7 @@ public class QuestionService {
     }
 
     public List<QuestionEntity> getQuestions(@NonNull AccountEntity principal) throws ApiException {
+        // TODO this will have a search method at some point
         List<Long> questionIds = assignedQuestionsRepository.findQuestionIdsByAccountId(principal.getAccountsId());
 
         logger.info("Questions fetched for {}", principal.getEmail());
