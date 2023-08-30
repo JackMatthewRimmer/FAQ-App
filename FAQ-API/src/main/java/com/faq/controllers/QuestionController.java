@@ -26,22 +26,33 @@ public class QuestionController {
 
         AccountEntity principal = getPrincipal();
         return new ResponseEntity<>
-                (questionService.createQuestion(questionRequest, principal), HttpStatus.CREATED);
+                (questionService.handleCreateQuestion(questionRequest, principal), HttpStatus.CREATED);
     }
 
     @GetMapping(value="/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getQuestions(@RequestParam int pageNumber, @RequestParam int pageSize) {
+    public ResponseEntity<Object> getQuestions
+            (@RequestParam(required = false) Integer pageNumber,
+             @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
 
         AccountEntity principal = getPrincipal();
-        Pageable pageInfo = PageRequest.of(pageNumber, pageSize);
-        return new ResponseEntity<>(questionService.getQuestions(principal, pageInfo), HttpStatus.OK);
+
+        if (pageNumber == null) {
+            return new ResponseEntity<>
+                    (questionService.handleGetQuestions(principal), HttpStatus.OK);
+        }
+        else {
+            Pageable pageInfo = PageRequest.of(pageNumber, pageSize);
+            return new ResponseEntity<>
+                    (questionService.handleGetQuestions(principal, pageInfo), HttpStatus.OK);
+        }
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> updateQuestion(@PathVariable Long id, @RequestBody QuestionRequest questionRequest) {
+    public ResponseEntity<Object> updateQuestion
+            (@PathVariable Long id, @RequestBody QuestionRequest questionRequest) {
 
         AccountEntity principal = getPrincipal();
-        questionService.updateQuestion(principal, id, questionRequest);
+        questionService.handleUpdateQuestion(principal, id, questionRequest);
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 

@@ -47,7 +47,7 @@ class QuestionServiceTests {
         questionRequest.setTitle(VALID_TITLE);
         questionRequest.setContent(VALID_CONTENT);
 
-        Map<String, String> response = questionService.createQuestion(questionRequest, principal);
+        Map<String, String> response = questionService.handleCreateQuestion(questionRequest, principal);
         assertEquals("/questions/0", response.get("Location"));
     }
 }
