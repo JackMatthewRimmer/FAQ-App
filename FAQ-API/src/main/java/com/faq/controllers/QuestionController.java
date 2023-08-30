@@ -4,6 +4,8 @@ import com.faq.services.QuestionService;
 import com.faq.common.entities.AccountEntity;
 import com.faq.common.requests.QuestionRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,10 +30,11 @@ public class QuestionController {
     }
 
     @GetMapping(value="/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getQuestions() {
+    public ResponseEntity<Object> getQuestions(@RequestParam int pageNumber, @RequestParam int pageSize) {
 
         AccountEntity principal = getPrincipal();
-        return new ResponseEntity<>(questionService.getQuestions(principal), HttpStatus.OK);
+        Pageable pageInfo = PageRequest.of(pageNumber, pageSize);
+        return new ResponseEntity<>(questionService.getQuestions(principal, pageInfo), HttpStatus.OK);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)

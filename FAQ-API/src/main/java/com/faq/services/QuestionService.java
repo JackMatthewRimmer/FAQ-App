@@ -47,8 +47,10 @@ public class QuestionService {
         return response;
     }
 
-    public Map<String, Object> getQuestions(@NonNull AccountEntity principal) throws ApiException {
-        Page<QuestionEntity> page = getAllQuestions(principal);
+    public Map<String, Object> getQuestions
+            (@NonNull AccountEntity principal, Pageable pageInfo) throws ApiException {
+
+        Page<QuestionEntity> page = getAllQuestions(principal, pageInfo);
 
         Map<String, Object> response = new HashMap<>();
         response.put("questions", page.getContent());
@@ -60,18 +62,6 @@ public class QuestionService {
 
     }
 
-    private Page<QuestionEntity> getAllQuestions(@NonNull AccountEntity principal) throws ApiException {
-        List<Long> questionIds = assignedQuestionsRepository
-                .findQuestionIdsByAccountId(principal.getAccountsId());
-        logger.info("Questions fetched for {}", principal.getEmail());
-        Pageable page = PageRequest.of(0, 10);
-        return questionRepository.findAllByQuestionsIdIn(questionIds, page);
-    }
-
-    private List<QuestionEntity> getQuestionsWithSearch(@NonNull AccountEntity principal) throws ApiException {
-        return null;
-    }
-
     public void updateQuestion(@NonNull AccountEntity principal, Long questionId, QuestionRequest questionRequest)
             throws ApiException {
         questionRequest.validate();
@@ -80,6 +70,20 @@ public class QuestionService {
         questionEntity.setContent(questionRequest.getContent());
         questionRepository.save(questionEntity);
         logger.info("Question successfully update with id {}", questionEntity.getQuestionsId());
+    }
+
+    private Page<QuestionEntity> getAllQuestions
+            (@NonNull AccountEntity principal, Pageable pageInfo) throws ApiException {
+
+        List<Long> questionIds = assignedQuestionsRepository
+                .findQuestionIdsByAccountId(principal.getAccountsId());
+        logger.info("Questions fetched for {}", principal.getEmail());
+        return questionRepository.findAllByQuestionsIdIn(questionIds, pageInfo);
+    }
+
+    private List<QuestionEntity> getQuestionsWithSearch
+            (@NonNull AccountEntity principal, Pageable pageInfo) throws ApiException {
+        return null;
     }
 
     private QuestionEntity verifyQuestionsExistsForAccount(@NonNull AccountEntity principal, Long questionId)
