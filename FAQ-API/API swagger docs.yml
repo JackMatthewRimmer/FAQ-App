@@ -1,81 +1,179 @@
-swagger: "2.0"
+openapi: "3.0.0"
 info:
   title: FAQ Api
   description: Full documentation for the FAQ Api
   version: 1.0.0
-host: faq.com
-basePath: /api
-schemes:
-  - https
+servers:
+  - url: https://faq.com/api
 paths:
   /accounts/:
     post:
       summary: Creates account, Returns JWT
       description: Posts a new account
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: payload
-          schema:
-            $ref: '#/definitions/AccountRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountRequest'
       responses:
-        201:
+        '201':
           description: Account was successfully created
-          schema:
-            $ref: '#/definitions/JWT'
-        400:
-          description: invalid payload
-          schema:
-            $ref: '#/definitions/ApiException'
-        409:
-          description: email alread in use
-          schema:
-            $ref: '#/definitions/ApiException'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JWT'
+        '400':
+          description: Invalid payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiException'
+        '409':
+          description: Email already in use
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiException'
 
   /accounts/login:
     post:
       summary: Authenticate details, Returns JWT
       description: Logs in a user and returns a JWT
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in : body
-          name: payload
-          schema:
-            $ref: '#/definitions/AccountRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountRequest'
       responses:
-        200:
+        '200':
           description: Account was successfully authenticated
-          schema:
-            $ref: '#/definitions/JWT'
-        400:
-          description: invalid payload
-          schema:
-            $ref: '#/definitions/ApiException'
-        409:
-          description: email already in use
-          schema:
-            $ref: '#/definitions/ApiException'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JWT'
+        '400':
+          description: Invalid payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiException'
+        '409':
+          description: Email already in use
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiException'
 
-definitions:
-  JWT:
-    properties:
-      token:
-        type: string
+  /v1/questions/:
+    post:
+      summary: Post a new question
+      description: Adds a new question to a user's account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuestionPayload'
+      responses:
+        '200':
+          description: Question was successfully created
+        '404':
+          description: Invalid request was sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiException'
+    get:
+      summary: List all questions (Paginated)
+      description: Returns all the user's questions
+      parameters:
+        - name: pageNumber
+          in: query
+          schema:
+            type: integer
+          required: false
+        - name: pageSize
+          in: query
+          schema:
+            type: integer
+          required: false
+      responses:
+        '200':
+          description: Questions successfully listed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListQuestionsResponse'
 
-  AccountRequest:
-    properties:
-      email:
-        type: string
-      password:
-        type: string
 
-  ApiException:
-    properties:
-      Error:
-        type: string
+
+components:
+  schemas:
+    JWT:
+      type: object
+      properties:
+        token:
+          type: string
+
+    AccountRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    ApiException:
+      type: object
+      properties:
+        Error:
+          type: string
+
+    QuestionPayload:
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+
+    Question:
+      type: object
+      properties:
+        questionId:
+          type: integer
+        title:
+          type: string
+        content:
+          type: string
+
+    QuestionListPaginated:
+      type: object
+      properties:
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Question'
+        currentPage:
+          type: integer
+        totalPages:
+          type: integer
+        totalItems:
+          type: integer
+
+    QuestionList:
+      type: object
+      properties:
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Question'
+
+    ListQuestionsResponse:
+      type: object
+      oneOf:
+        - $ref: '#/components/schemas/QuestionList'
+        - $ref: '#/components/schemas/QuestionListPaginated'
+      
