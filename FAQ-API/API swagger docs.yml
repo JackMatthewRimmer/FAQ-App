@@ -106,7 +106,30 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ListQuestionsResponse'
+        '400':
+          description: Invalid request was sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiException'
 
+  /v1/questions/{id}:
+    put:
+      summary: Update a question
+      description: Updates a question with the specified ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+      responses:
+        '200':
+          description: Question successfully updated
+        '400':
+          description: Invalid request was sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiException'
 
 
 components:
