@@ -1,4 +1,4 @@
-package com.faq.Security;
+package com.faq.security;
 
 import java.io.IOException;
 import javax.servlet.FilterChain;
@@ -6,9 +6,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.faq.Services.AccountService;
-import com.faq.common.Exceptions.ApiException;
-import com.faq.common.Exceptions.ApiException.ApiErrorType;
+import com.faq.services.AccountService;
+import com.faq.common.exceptions.ApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,7 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import io.jsonwebtoken.ExpiredJwtException;
 
-import static com.faq.common.Exceptions.ApiException.ApiErrorType.*;
+import static com.faq.common.exceptions.ApiException.ApiErrorType.*;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
@@ -67,8 +66,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
             if (jwtTokenUtil.validateToken(jwtToken, userDetails).equals(true)) {
 
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                        new UsernamePasswordAuthenticationToken
+                                (userDetails, null, userDetails.getAuthorities());
                 usernamePasswordAuthenticationToken
                         .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);

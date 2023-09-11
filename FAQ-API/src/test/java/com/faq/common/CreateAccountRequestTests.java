@@ -1,7 +1,7 @@
 package com.faq.common;
 
-import com.faq.common.Exceptions.ApiException;
-import com.faq.common.Requests.AccountRequest;
+import com.faq.common.exceptions.ApiException;
+import com.faq.common.requests.AccountRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

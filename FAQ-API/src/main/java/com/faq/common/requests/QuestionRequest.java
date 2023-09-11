@@ -1,9 +1,9 @@
-package com.faq.common.Requests;
+package com.faq.common.requests;
 
-import com.faq.common.Exceptions.ApiException;
+import com.faq.common.exceptions.ApiException;
 
-import static com.faq.common.Exceptions.ApiException.ApiErrorType.QUESTION_MISSING_CONTENT;
-import static com.faq.common.Exceptions.ApiException.ApiErrorType.QUESTION_MISSING_TITLE;
+import static com.faq.common.exceptions.ApiException.ApiErrorType.QUESTION_MISSING_CONTENT;
+import static com.faq.common.exceptions.ApiException.ApiErrorType.QUESTION_MISSING_TITLE;
 
 public class QuestionRequest implements Request {
 

@@ -1,10 +1,10 @@
-package com.faq.Services;
+package com.faq.services;
 
-import com.faq.Security.JwtTokenUtil;
-import com.faq.common.Entities.AccountEntity;
-import com.faq.common.Exceptions.ApiException;
-import com.faq.common.Repositories.UserRepository;
-import com.faq.common.Requests.AccountRequest;
+import com.faq.security.JwtTokenUtil;
+import com.faq.common.entities.AccountEntity;
+import com.faq.common.exceptions.ApiException;
+import com.faq.common.repositories.AccountRepository;
+import com.faq.common.requests.AccountRequest;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,13 +29,13 @@ class AccountServiceTests {
     private AccountRequest accountRequest;
 
     @Mock
-    private UserRepository userRepository;
+    private AccountRepository userRepository;
 
     @Mock
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @Mock
-    JwtTokenUtil jwtTokenUtil;
+    private JwtTokenUtil jwtTokenUtil;
 
     @InjectMocks
     private AccountService accountService;

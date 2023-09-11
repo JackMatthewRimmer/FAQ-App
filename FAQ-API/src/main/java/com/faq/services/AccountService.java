@@ -1,10 +1,10 @@
-package com.faq.Services;
+package com.faq.services;
 
-import com.faq.Security.JwtTokenUtil;
-import com.faq.common.Entities.AccountEntity;
-import com.faq.common.Exceptions.ApiException;
-import com.faq.common.Repositories.UserRepository;
-import com.faq.common.Requests.AccountRequest;
+import com.faq.security.JwtTokenUtil;
+import com.faq.common.entities.AccountEntity;
+import com.faq.common.exceptions.ApiException;
+import com.faq.common.repositories.AccountRepository;
+import com.faq.common.requests.AccountRequest;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
@@ -19,13 +19,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.faq.common.Exceptions.ApiException.ApiErrorType.*;
+import static com.faq.common.exceptions.ApiException.ApiErrorType.*;
 
 @Service
 public class AccountService implements UserDetailsService {
 
     @Autowired
-    private UserRepository userRepository;
+    private AccountRepository accountRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -45,7 +45,7 @@ public class AccountService implements UserDetailsService {
 
         AccountEntity accountEntity = new AccountEntity(accountRequest.getEmail(), hashedPassword);
 
-        this.userRepository.save(accountEntity);
+        this.accountRepository.save(accountEntity);
 
         String token = jwtTokenUtil.generateToken(accountEntity);
 
@@ -80,7 +80,7 @@ public class AccountService implements UserDetailsService {
 
     private void verifyEmailNotInUse(@NonNull String email) {
 
-        boolean emailInUse = userRepository.existsByEmail(email);
+        boolean emailInUse = accountRepository.existsByEmail(email);
 
         if (emailInUse) {
             throw new ApiException(ACCOUNT_EMAIL_IN_USE, AccountService.class);
@@ -89,7 +89,7 @@ public class AccountService implements UserDetailsService {
 
     private void verifyAccountExists(@NonNull AccountEntity account) {
 
-        Optional<AccountEntity> queryResult = userRepository.findByEmail(account.getEmail());
+        Optional<AccountEntity> queryResult = accountRepository.findByEmail(account.getEmail());
 
         boolean passwordsMatch = queryResult
                 .map(databaseAccount ->
@@ -104,7 +104,7 @@ public class AccountService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
-        return userRepository.findByEmail(username)
+        return accountRepository.findByEmail(username)
                 .orElseThrow(() ->
                         new ApiException(ACCOUNT_DOES_NOT_EXIST, AccountService.class));
     }
